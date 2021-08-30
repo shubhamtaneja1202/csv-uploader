@@ -1,9 +1,9 @@
 var mysql = require('mysql');
-
+var config = require('config');
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "yourusername",
-  password: "yourpassword"
+  host: config.host,
+  user: config.user,
+  password: config.passwordå
 });
 
 var getConnection = () => {
@@ -13,6 +13,8 @@ var getConnection = () => {
       });
 }
 
-module.exports = getConnection;
+module.exports = {
+   getConnection : getConnection
+};
 
   
