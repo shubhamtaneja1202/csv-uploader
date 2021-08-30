@@ -3,7 +3,10 @@ const fileServices = require('../../services/file');
 
 const uploadFile = async (file) => {
  try {
-    console.log('file', file );
+    // validation
+    if(file){
+       throw new Error('file is required');
+    }
     let response = await fileServices.uploadFile(file);
     return response;
  }
@@ -16,7 +19,10 @@ const uploadFile = async (file) => {
 
 const getFileData = async(fileId) => {
     try {
-      console.log('here')
+         // validation
+         if(fileId){
+            throw new Error('fileId is required');
+         }
         let response = await fileServices.getFileData(fileId);
         return response;
      }
@@ -49,6 +55,9 @@ const getFileList = async (query) => {
  */
 const getFileById = async (fileId) => {
     try {
+         if(fileId){
+            throw new Error('fileId is required');
+         }
         let response = await fileServices.getFileById(fileId);
         return response;
      }

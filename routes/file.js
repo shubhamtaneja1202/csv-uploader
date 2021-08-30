@@ -5,7 +5,7 @@ const upload = multer({ dest: 'uploads/' })
 
 routes.post('/file/upload', upload.single('file'), async(req, res) => {
   try {
-    let response = await fileControllers.uploadFile(req.file);
+    const response = await fileControllers.uploadFile(req.file);
     res.status(200).send(response);
   }
   catch(err){
@@ -17,7 +17,7 @@ routes.post('/file/upload', upload.single('file'), async(req, res) => {
 // get the data
 routes.get('/file/:id', async(req, res) => {
   try {
-    let response = await fileControllers.getFileData(req.params.id);
+    const response = await fileControllers.getFileData(req.params.id);
     res.status(200).send({data : response, message : null});
   }
   catch(err){
@@ -27,7 +27,7 @@ routes.get('/file/:id', async(req, res) => {
 
 routes.get('/file/:id/status', async(req, res) => {
   try {
-    let response = await fileControllers.getFileById(req.params.id);
+    const response = await fileControllers.getFileById(req.params.id);
     res.status(200).send({data : response, message : null});
   }
   catch(err){
@@ -39,7 +39,7 @@ routes.get('/file/:id/status', async(req, res) => {
 // get a list of files
 routes.get('/file', async(req, res) => {
   try {
-    let response = await fileControllers.getFileList(req.query);
+    const response = await fileControllers.getFileList(req.query);
     res.status(200).send({data : response, message : null});
   }
   catch(err){
