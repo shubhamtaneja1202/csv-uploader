@@ -23,7 +23,7 @@ const uploadFile = async (file) => {
     return request.id
  }
  catch (error){
-    throw new Error(err);
+    throw err;
  }
  
 }
@@ -35,7 +35,7 @@ const updateFileStatus = async(fileId, value) =>{
         return true;
     }
     catch(err){
-        throw new Error(err);
+        throw err;
     }
 
 }
@@ -82,7 +82,7 @@ const uploadFileJob = async (file) => {
     catch(err){
         db.rollback();
         await updateFileStatus(file.id,'FAILED');
-        throw new Error(err);
+        throw err;
     }   
 }
 
@@ -106,7 +106,7 @@ const getFileData = async(fileId) => {
             return result;
     }
     catch(err){
-        throw new Error(err);
+        throw err;
     }
 
 }
@@ -118,7 +118,7 @@ const getFileData = async(fileId) => {
  */
 const getFileList = async (query) => {
     try {
-        let sql = `select * from csv requests`;
+        let sql = `select * from csv_requests`;
         let params = [];
         if(query.fileId){
             sql += ` where file_name = ?`;
@@ -128,12 +128,13 @@ const getFileList = async (query) => {
             sql += ` limit ?,?`;
             params.push(query.skip, query.limit);
         }
+       console.log('connection',db)
        let files = await db.query(sql,params);
        console.log('files',files);
        return files;
     }
     catch(err){
-        throw new Error(err);
+        throw err;
     }
 
 }
@@ -152,7 +153,7 @@ const getFileById = async (fileId) => {
         return fileData;
     }
     catch(err){
-        throw new Error(err)
+        throw err
     }
   
 }

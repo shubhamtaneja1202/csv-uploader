@@ -3,14 +3,15 @@ var config = require('config');
 var con = mysql.createConnection({
   host: config.host,
   user: config.user,
-  password: config.password
+  password: config.password,
+  database: config.database
 });
 
 var getConnection = () => {
     con.connect(function(err, connection) {
         if (err) throw err;
-        return connection;
-      });
+    });
+    return con;
 }
 
 module.exports = {
