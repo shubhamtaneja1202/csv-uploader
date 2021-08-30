@@ -11,10 +11,12 @@ const uploadFile = async (file) => {
     if(!file){
        throw new Error('file is required');
     }
+
+    // only csv files are supported
     if(file.mimetype != 'text/csv'){
        throw new Error('file not supported');
     }
-    console.log('file', file)
+    
     let response = await fileServices.uploadFile(file);
     return response;
  }
