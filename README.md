@@ -36,3 +36,6 @@ Windows
 set NODE_ENV=localhost
 node server.js
 ```
+
+## Postman collection
+https://www.getpostman.com/collections/89ab82f47411d62ef032
