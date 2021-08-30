@@ -131,7 +131,7 @@ const getFileList = async (query) => {
         }
         if(query.skip && query.limit){
             sql += ` limit ?,?`;
-            params.push(query.skip, query.limit);
+            params.push(parseInt(query.skip), parseInt(query.limit));
         }
        let files = await db.runQuery(sql,params);
        return files;
