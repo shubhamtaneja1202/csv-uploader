@@ -2,7 +2,6 @@ const db = require('../../utils/db');
 const fs = require('fs')
 const csv = require('csvtojson');
 const file = require('.');
-const { query } = require('express');
 const status = {
     INITIALIZED : 0,
     FAILED : -1,
@@ -81,7 +80,8 @@ const uploadFileJob = async (file) => {
         }
         
         await updateFileStatus(file.id,'SUCCESS');
-        db.commit();
+        db.commit(); 
+        fs.unlinkSync(file.path);
         return true;
     }
     catch(err){
