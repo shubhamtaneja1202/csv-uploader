@@ -1,9 +1,9 @@
-const services = require('../services');
+const fileServices = require('../../services/file');
 
 
 const uploadFile = async (file) => {
  try {
-    let response = await services.uploadFile(file);
+    let response = await fileServices.uploadFile(file);
     return response
  }
  catch (error){
@@ -15,7 +15,7 @@ const uploadFile = async (file) => {
 
 const getFileData = async(fileId) => {
     try {
-        let response = await services.getFileData(file);
+        let response = await fileServices.getFileData(file);
         return response
      }
      catch (error){
@@ -31,7 +31,7 @@ const getFileData = async(fileId) => {
  */
 const getFileList = async (query) => {
     try {
-        let response = await services.getFileList(query);
+        let response = await fileServices.getFileList(query);
         return response
      }
      catch (error){
@@ -47,7 +47,7 @@ const getFileList = async (query) => {
  */
 const getFileById = async (fileId) => {
     try {
-        let response = await services.getFileById(fileId);
+        let response = await fileServices.getFileById(fileId);
         return response
      }
      catch (error){
