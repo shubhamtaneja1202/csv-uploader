@@ -18,11 +18,11 @@ const uploadFile = async (file) => {
     let request = await db.runQuery('INSERT INTO csv_requests(file_name, status) values (?,?)',requestData);
     
     // initiate the uploadFileJob
-    file.id = request.id;
-    uploadFileJob(file); 
+    file.id = request.insertId;
+    uploadFileJob(file, ); 
     
     // return file id
-    return request.id
+    return { request_id : request.insertId}
  }
  catch (err){
     throw err;
@@ -33,7 +33,7 @@ const uploadFile = async (file) => {
 const updateFileStatus = async(fileId, value) =>{
     try {
         let requestData = [status[value],fileId]
-        await db.runQuery('UPDATE csv_requests set status = ? where file_id = ?',requestData); 
+        await db.runQuery('UPDATE csv_requests set status = ? where id = ?',requestData); 
         return true;
     }
     catch(err){
@@ -48,7 +48,7 @@ const uploadFileJob = async (file) => {
         let rows = [];
         let values = [];
         let hashmap = {};
-        let sql = 'INSERT INTO header_data(header_id,value,row) values ';
+        let sql = 'INSERT INTO header_data(header_id,`value`,`row`) values ';
         let insertSQL = ''
         
         // parse the csv file
@@ -58,17 +58,18 @@ const uploadFileJob = async (file) => {
         for(let key in firstRow){
             headerData = [file.id, key]
             let result = await db.runQuery('insert into file_headers(file_id, header) values (?,?)', headerData);
-            hashmap[firstRow[key]] = result.id;
+            hashmap[key] = result.insertId;
         }
 
+        console.log('hashmap', hashmap)
         for(let index in rows){
             for(let key in rows[index]){
-                values.push(hashmap[row[key]],row[key],index);
+                values.push(hashmap[key],rows[index][key],parseInt(index));
                 if(!insertSQL){
-                    insertSQL = ' (?,?)';
+                    insertSQL = ' (?,?,?)';
                     continue;
                 }
-                insertSQL = insertSQL + ' ,(?,?)';
+                insertSQL = insertSQL + ' ,(?,?,?)';
             }
         }
         
@@ -84,6 +85,7 @@ const uploadFileJob = async (file) => {
     }
     catch(err){
         db.rollback();
+        console.log('err', err);
         await updateFileStatus(file.id,'FAILED');
         throw err;
     }   
