@@ -2,6 +2,7 @@ const db = require('../../utils/db');
 const fs = require('fs')
 const csv = require('csvtojson');
 const file = require('.');
+const { query } = require('express');
 const status = {
     INITIALIZED : 0,
     FAILED : -1,
@@ -95,11 +96,10 @@ const uploadFileJob = async (file) => {
 const getFileData = async(fileId) => {
     try {
         // get file data from csv_requests
-        db.runQuery = `select hd.row, fh.header, hd.value  from file_headers fh left join header_data hd 
-        on fh.id = fd.header_id where fh.Id = ?
-        group by row,header_id`;
+        let query = `select hd.row, fh.header, hd.value  from file_headers fh left join header_data hd 
+        on fh.id = hd.header_id where fh.file_id = ?`;
 
-        let response = await db.runQuery(db.runQuery,[fileId]);
+        let response = await db.runQuery(query,[fileId]);
         let result = []
         // manupulate the data
         for (let resp of response){

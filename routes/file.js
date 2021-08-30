@@ -17,7 +17,7 @@ routes.post('/file/upload', upload.single('file'), async(req, res) => {
 // get the data
 routes.get('/file/:id', async(req, res) => {
   try {
-    let response = await fileControllers.getFileData(req.query.id);
+    let response = await fileControllers.getFileData(req.params.id);
     res.status(200).send({data : response, message : null});
   }
   catch(err){

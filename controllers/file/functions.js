@@ -14,10 +14,10 @@ const uploadFile = async (file) => {
 }
 
 
-const getFileData = async(req, res) => {
+const getFileData = async(fileId) => {
     try {
       console.log('here')
-        let response = await fileServices.getFileData(req.params.file_id);
+        let response = await fileServices.getFileData(fileId);
         return response;
      }
      catch (error){
