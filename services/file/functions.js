@@ -1,6 +1,7 @@
 const db = require('../../utils/db').getConnection();
 const fs = require('fs')
 const csv = require('csvtojson');
+const file = require('.');
 const status = {
     INITIALIZED : 0,
     FAILED : -1,
@@ -22,7 +23,7 @@ const uploadFile = async (file) => {
     return request.id
  }
  catch (error){
-    return error;
+    throw new Error(err);
  }
  
 }
@@ -34,7 +35,7 @@ const updateFileStatus = async(fileId, value) =>{
         return true;
     }
     catch(err){
-        return err;
+        throw new Error(err);
     }
 
 }
@@ -81,7 +82,7 @@ const uploadFileJob = async (file) => {
     catch(err){
         db.rollback();
         await updateFileStatus(file.id,'FAILED');
-        return err;
+        throw new Error(err);
     }   
 }
 
@@ -105,7 +106,7 @@ const getFileData = async(fileId) => {
             return result;
     }
     catch(err){
-        return err;
+        throw new Error(err);
     }
 
 }
@@ -128,10 +129,11 @@ const getFileList = async (query) => {
             params.push(query.skip, query.limit);
         }
        let files = await db.query(sql,params);
+       console.log('files',files);
        return files;
     }
     catch(err){
-        return err;
+        throw new Error(err);
     }
 
 }
@@ -150,7 +152,7 @@ const getFileById = async (fileId) => {
         return fileData;
     }
     catch(err){
-        return err
+        throw new Error(err)
     }
   
 }

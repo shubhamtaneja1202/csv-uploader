@@ -7,7 +7,7 @@ const uploadFile = async (req, res) => {
     return response
  }
  catch (error){
-    return error;
+    throw new Error(error);
  }
  
 }
@@ -19,7 +19,7 @@ const getFileData = async(req, res) => {
         return response
      }
      catch (error){
-        return error;
+        throw new Error(error);
      }
 
 }
@@ -29,14 +29,13 @@ const getFileData = async(req, res) => {
  * @param {query params} 
  * @returns file list
  */
-const getFileList = async (req, res) => {
+const getFileList = async (query) => {
     try {
-        let response = await fileServices.getFileList(req.query);
+        let response = await fileServices.getFileList(query);
         return response
      }
      catch (error){
-        console.log('error', error)
-        return error;
+        throw new Error(error);
      }
 
 }
@@ -52,7 +51,7 @@ const getFileById = async (req, res) => {
         return response
      }
      catch (error){
-        return error;
+        throw new Error(error);
      }
   
 }
