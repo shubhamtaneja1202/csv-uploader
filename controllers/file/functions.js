@@ -35,6 +35,7 @@ const getFileList = async (req, res) => {
         return response
      }
      catch (error){
+        console.log('error', error)
         return error;
      }
 

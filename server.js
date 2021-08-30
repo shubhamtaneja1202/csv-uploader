@@ -4,7 +4,7 @@ const port = 3000
 
 const routes = require('./routes/file.js');
 
-app.use('./',routes);
+app.use(routes);
 
 
 app.listen(port, () => {

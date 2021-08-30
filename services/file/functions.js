@@ -1,5 +1,4 @@
-const db = require('/utils/db').getConnection();
-const csv = require('csv-parser')
+const db = require('../../utils/db').getConnection();
 const fs = require('fs')
 const csv = require('csvtojson');
 const status = {
@@ -50,7 +49,7 @@ const uploadFileJob = async (file) => {
         let insertSQL = ''
         
         // parse the csv file
-        let rows = await csv().fromString(file);
+        rows = await csv().fromString(file);
         let firstRow = rows[0];
         for(let key in firstRow){
             headerData = [file.id, key]

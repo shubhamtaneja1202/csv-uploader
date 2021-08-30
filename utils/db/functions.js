@@ -3,7 +3,7 @@ var config = require('config');
 var con = mysql.createConnection({
   host: config.host,
   user: config.user,
-  password: config.passwordå
+  password: config.password
 });
 
 var getConnection = () => {
