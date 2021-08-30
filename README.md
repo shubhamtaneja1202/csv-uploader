@@ -25,6 +25,7 @@ npm install
 your db credentials.
 
 4. start server by running below command
+
 MAC
 ```
 $ export NODE_ENV=localhost
