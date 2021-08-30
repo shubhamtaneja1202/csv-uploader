@@ -6,14 +6,15 @@ var con = mysql.createConnection({
   password: config.password,
   database: config.database
 });
-var getConnection = () => {
-    con.connect(function(err, connection) {
-        if (err) throw err;
-    });
+
+// setting up connection
+init = () => {
+  con.connect(function(err, connection) {
+    if (err) throw err;
+});  
 }
 
-
-var runQuery = (sql, values) => {
+const runQuery = (sql, values) => {
     return new Promise(function (resolve, reject) {
       if(!values){
         values = [];
@@ -26,21 +27,20 @@ var runQuery = (sql, values) => {
     });
 };
 
-var beginTransaction = () => {
+const beginTransaction = () => {
   con.beginTransaction();
   return true;
 }
 
-var commit = () => {
+const commit = () => {
   con.commit();
   return true;
 }
 
-var rollback = () => {
+const rollback = () => {
   con.rollback();
   return true;
 }
-getConnection();
 module.exports = {
    runQuery,
    beginTransaction,
