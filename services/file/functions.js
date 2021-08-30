@@ -1,4 +1,4 @@
-const db = require('../../utils/db').getConnection();
+const db = require('../../utils/db');
 const fs = require('fs')
 const csv = require('csvtojson');
 const file = require('.');
@@ -12,8 +12,10 @@ const status = {
 const uploadFile = async (file) => {
  // initialize the request
  try {
-    let requestData = [file.name,status.INITIALIZED,]
-    let request = await db.query('INSERT INTO csv_requests(file_name, status) values (?,?)',[requestData]);
+    let requestData = []
+    requestData.push(file.originalname);
+    requestData.push(status.INITIALIZED);
+    let request = await db.runQuery('INSERT INTO csv_requests(file_name, status) values (?,?)',requestData);
     
     // initiate the uploadFileJob
     file.id = request.id;
@@ -22,7 +24,7 @@ const uploadFile = async (file) => {
     // return file id
     return request.id
  }
- catch (error){
+ catch (err){
     throw err;
  }
  
@@ -31,7 +33,7 @@ const uploadFile = async (file) => {
 const updateFileStatus = async(fileId, value) =>{
     try {
         let requestData = [status[value],fileId]
-        await db.query('UPDATE csv_requests set status = ? where file_id = ?',requestData); 
+        await db.runQuery('UPDATE csv_requests set status = ? where file_id = ?',requestData); 
         return true;
     }
     catch(err){
@@ -50,11 +52,12 @@ const uploadFileJob = async (file) => {
         let insertSQL = ''
         
         // parse the csv file
-        rows = await csv().fromString(file);
+        rows = await csv().fromFile(file.path);
+        console.log(rows);
         let firstRow = rows[0];
         for(let key in firstRow){
             headerData = [file.id, key]
-            let result = await db.query('insert into file_headers(file_id, header) values (?,?)', headerData);
+            let result = await db.runQuery('insert into file_headers(file_id, header) values (?,?)', headerData);
             hashmap[firstRow[key]] = result.id;
         }
 
@@ -72,7 +75,7 @@ const uploadFileJob = async (file) => {
         // insert values
         if(values.length){
             sql = sql + insertSQL;
-            await db.query(sql,values);
+            await db.runQuery(sql,values);
         }
         
         await updateFileStatus(file.id,'SUCCESS');
@@ -90,11 +93,11 @@ const uploadFileJob = async (file) => {
 const getFileData = async(fileId) => {
     try {
         // get file data from csv_requests
-        query = `select hd.row, fh.header, hd.value  from file_headers fh left join header_data hd 
+        db.runQuery = `select hd.row, fh.header, hd.value  from file_headers fh left join header_data hd 
         on fh.id = fd.header_id where fh.Id = ?
         group by row,header_id`;
 
-        let response = await db.query(query,[fileId]);
+        let response = await db.runQuery(db.runQuery,[fileId]);
         let result = []
         // manupulate the data
         for (let resp of response){
@@ -113,7 +116,7 @@ const getFileData = async(fileId) => {
 
 /**
  * 
- * @param {query params} 
+ * @param {db.runQuery params} 
  * @returns file list
  */
 const getFileList = async (query) => {
@@ -121,16 +124,14 @@ const getFileList = async (query) => {
         let sql = `select * from csv_requests`;
         let params = [];
         if(query.fileId){
-            sql += ` where file_name = ?`;
+            sql += ` where id = ?`;
             params.push(query.fileId);
         }
         if(query.skip && query.limit){
             sql += ` limit ?,?`;
             params.push(query.skip, query.limit);
         }
-       console.log('connection',db)
-       let files = await db.query(sql,params);
-       console.log('files',files);
+       let files = await db.runQuery(sql,params);
        return files;
     }
     catch(err){

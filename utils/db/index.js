@@ -1,5 +1,8 @@
 const functions = require('./functions');
 
 module.exports = {
-    getConnection : functions.getConnection
+    runQuery : functions.runQuery,
+    commit : functions.commit,
+    rollback : functions.rollback,
+    beginTransaction : functions.beginTransaction
 }

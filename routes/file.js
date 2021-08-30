@@ -1,14 +1,15 @@
 const fileControllers = require('../controllers/file');
 const routes = require('express').Router();
 const multer  = require('multer')
-const upload = multer()
+const upload = multer({ dest: 'uploads/' })
 
-routes.post('/file/upload', upload.none(), async(req, res) => {
+routes.post('/file/upload', upload.single('file'), async(req, res) => {
   try {
-    let response = await fileControllers.uploadFile(req);
+    let response = await fileControllers.uploadFile(req.file);
     res.status(200).send(response);
   }
   catch(err){
+    console.log('error', err)
     res.status(500).send({message : err.message});
   }
 })
@@ -26,7 +27,7 @@ routes.get('/file/:id', async(req, res) => {
 
 routes.get('/file/:id/status', async(req, res) => {
   try {
-    let response = await fileControllers.getFileById(req.query.id);
+    let response = await fileControllers.getFileById(req.params.id);
     res.status(200).send({data : response, message : null});
   }
   catch(err){
@@ -39,7 +40,6 @@ routes.get('/file/:id/status', async(req, res) => {
 routes.get('/file', async(req, res) => {
   try {
     let response = await fileControllers.getFileList(req.query);
-    console.log('response', response)
     res.status(200).send({data : response, message : null});
   }
   catch(err){
