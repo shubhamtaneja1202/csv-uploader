@@ -1,12 +1,20 @@
 const fileServices = require('../../services/file');
 
-
+/**
+ * 
+ * @param {file} file 
+ * @returns request id of file uploaded
+ */
 const uploadFile = async (file) => {
  try {
     // validation
     if(!file){
        throw new Error('file is required');
     }
+    if(file.mimetype != '/text/csv'){
+       throw new Error('file not supported');
+    }
+    console.log('file', file)
     let response = await fileServices.uploadFile(file);
     return response;
  }
@@ -16,7 +24,11 @@ const uploadFile = async (file) => {
  
 }
 
-
+/**
+ * 
+ * @param {fileId} fileId 
+ * @returns data related to a perticular file
+ */
 const getFileData = async(fileId) => {
     try {
          // validation
