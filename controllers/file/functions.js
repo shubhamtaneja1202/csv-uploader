@@ -11,7 +11,7 @@ const uploadFile = async (file) => {
     if(!file){
        throw new Error('file is required');
     }
-    if(file.mimetype != '/text/csv'){
+    if(file.mimetype != 'text/csv'){
        throw new Error('file not supported');
     }
     console.log('file', file)
